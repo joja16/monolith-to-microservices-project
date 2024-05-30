@@ -15,11 +15,13 @@ jobs:
           command: |
             echo "Inside the Build and push Docker image step"
             docker --version # print the version for logging
-            curl -fsSl https://deb.nodesource.com/setup_16.x | sudo -E bash -
+            
+            # Install Node.js using the NodeSource setup script
+            curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
+            
             node -v
             npm -v
-            echo "Login infors"
             echo "Login infors"
 
             docker build -t udagram-api-feed ./udagram-api-feed
