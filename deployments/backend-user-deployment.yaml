@@ -1,49 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: feed-service
   labels:
-    service: feed-service  
+    service: backend-user
+  name: backend-user
 spec:
   replicas: 2
-  selector:
+  selector: 
     matchLabels:
-      service: feed-service
+      service: backend-user
   template:
     metadata:
       labels:
-        service: feed-service
+        service: backend-user
     spec:
       containers:
-      - image: tomphamns/udagram-api-feed:v1
-        name: feed-service
-        imagePullPolicy: Always 
+      - image: tomphamns/udagram-api-user:v1
+        name: backend-user 
+        imagePullPolicy: Always  
         resources:
           requests:
             cpu: "250m"
           limits:
-            cpu: "500m"                  
+            cpu: "500m"      
         env:
         - name: URL
           valueFrom:
             configMapKeyRef:
               name: env-config
               key: URL
-        - name: AWS_BUCKET
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_BUCKET
-        - name: AWS_PROFILE
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_PROFILE
-        - name: AWS_REGION
-          valueFrom:
-            configMapKeyRef:
-              name: env-config
-              key: AWS_REGION
         - name: JWT_SECRET
           valueFrom:
             configMapKeyRef:
@@ -68,13 +53,5 @@ spec:
           valueFrom:
             secretKeyRef:
               name: env-secret
-              key: POSTGRES_USERNAME      
-        volumeMounts:
-        - name: aws-secret
-          mountPath: "/root/.aws/"
-          readOnly: true        
+              key: POSTGRES_USERNAME
       restartPolicy: Always
-      volumes:
-      - name: aws-secret
-        secret:
-          secretName: aws-secret
